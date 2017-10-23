@@ -1,4 +1,6 @@
-
+/*
+    Copyright (c) 2017  Camilo Chacón Sartori
+*/
 grammar PoleLang;
 
 @header {

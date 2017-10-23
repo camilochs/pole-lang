@@ -1,13 +1,16 @@
 
-package grammar;
-import grammar.PoleLangParser.*;
 
+package grammar;
+
+/**
+ * Check packages not used. Avoid *.
+ */
+import grammar.PoleLangParser.*;
 import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ErrorNode;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.*;
@@ -17,17 +20,33 @@ import java.io.FileWriter;
 import static java.util.Comparator.comparingDouble;
 
 
+/**
+ * Listener object.
+ *
+ * @author Camilo Chacón Sartori
+ * @version 0.0.1
+ */
 public class Listener extends PoleLangBaseListener {
 
 
     private Map<String, Integer> variables;
-    private List<String> buffer  = new ArrayList<>();
+    private List<String> buffer;
+
+    /**
+     * Instantiates a new Listener.
+     */
     public Listener() {
+        buffer = new ArrayList<>();
         variables = new HashMap<>();
     }
+
+    /**
+     * Check if exists a file
+     * @param fileName
+     * @return
+     */
     private Path exitsFile(String fileName){
         Path pathFile = Paths.get(fileName);
-
         if(Files.notExists(pathFile)){
             System.out.println(pathFile.getFileName());
             System.out.println("No found file.");
@@ -36,22 +55,31 @@ public class Listener extends PoleLangBaseListener {
         return pathFile;
     }
 
+    /**
+     * Exit print action. Note: REFACTORING please
+     *
+     * @param ctx the ctx
+     */
     @Override
     public void exitPrintAction(PrintActionContext ctx) {
         Path pathFile = exitsFile(ctx.FileNameText().toString());
-
         if(pathFile == null) return;
 
+        //Variable exit node
         int indexLine = 1;
+        int startLine = 0;
+        int endLine = 0;
         boolean isParams = false;
         boolean isLineActionWithLimit = false;
         boolean isIfAction = false;
         String ifActionSearch = "";
-        int startLine = 0, endLine = 0;
         String endLineText = "";
+        final String end = "end";
+
+        //Detect a "Print action parameters"
         if(ctx.printActionParameters() != null){
             isParams = true;
-            //Line action
+            //Detect a "Line action parameters"
             if(ctx.printActionParameters().lineAction() != null){
                 LineActionContext actionContext = ctx.printActionParameters().lineAction();
                 startLine = Integer.parseInt(actionContext.Number().getText());
@@ -62,10 +90,9 @@ public class Listener extends PoleLangBaseListener {
                     }else{
                         endLineText = actionContext.lineActionWithLimit().End().getText();
                     }
-                    //System.out.println(endLineText);
-                    endLine = (endLineText.equals("end")) ? -1 : Integer.parseInt(endLineText);
+                    endLine = (endLineText.equals(end)) ? -1 : Integer.parseInt(endLineText);
                 }
-                //If action
+                //Detect a "If action"
             }else if(ctx.printActionParameters().ifAction() != null){
                 isIfAction = true;
                 ExitsActionContext existsAction = ctx.printActionParameters().ifAction().logicalAction().exitsAction();
@@ -79,17 +106,16 @@ public class Listener extends PoleLangBaseListener {
                     }else{
                         endLineText = lineAction.lineActionWithLimit().End().getText();
                     }
-                    //System.out.println(endLineText);
-                    endLine = (endLineText.equals("end")) ? -1 : Integer.parseInt(endLineText);
+                    endLine = (endLineText.equals(end)) ? -1 : Integer.parseInt(endLineText);
                 }
-                ifActionSearch = existsAction.StringInput().getText().substring(1, existsAction.StringInput().getText().length() - 1);
-
+                ifActionSearch = existsAction.StringInput().getText()
+                        .substring(1, existsAction.StringInput().getText().length() - 1);
             }
-
         }
         try (Stream<String> lines = Files.lines(pathFile)) {
             if(!isParams) lines.forEach(System.out::println);
             else{
+                //Note: refactoring, many if nested
                 for(String row : lines.collect(Collectors.toList())){
                     if(isLineActionWithLimit){
                         if ((indexLine >= startLine && endLine >= indexLine) || endLine == -1) {
@@ -115,7 +141,6 @@ public class Listener extends PoleLangBaseListener {
                         break;
                     }
                     indexLine++;
-                    //System.out.println(String.format("Line %d - %s", indexLine++, row));
                 }
             }
 
@@ -124,40 +149,58 @@ public class Listener extends PoleLangBaseListener {
         }
     }
 
+    /**
+     * Exit add action.
+     *
+     * @param ctx the ctx
+     */
     @Override
     public void exitAddAction(AddActionContext ctx) {
         boolean isHead = ctx.headAction() != null;
-
         Path pathFile = exitsFile(ctx.FileNameText().toString());
         if(pathFile == null) return;
+
         String textInput = ctx.StringInput().getText().substring(1, ctx.StringInput().getText().length() - 1);
 
         try (Stream<String> lines = Files.lines(pathFile)) {
+            //The file is modified.
             List<String> replaced = lines
                     .map(line-> (isHead) ? textInput + line: line + textInput)
                     .collect(Collectors.toList());
-
             Files.write(pathFile, replaced);
 
-            buffer = lines.collect(Collectors.toList());
+            //Copy list modified to buffer
+            buffer = new ArrayList<String>(replaced);
 
         }catch (Exception ex){
             System.out.println(ex.getMessage());
         }
     }
-    private static boolean isNumeric(String str)
+
+    /**
+     * Check if string is numeric.
+     * @param str
+     * @return
+     */
+    private static boolean isNumeric(String text)
     {
-        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+        return text.matches("-?\\d+(\\.\\d+)?");
     }
+
+    /**
+     * Exit split action.
+     *
+     * @param ctx the ctx
+     */
     @Override
     public void exitSplitAction(SplitActionContext ctx) {
 
         Path pathFile = exitsFile(ctx.FileNameText().toString());
         if(pathFile == null) return;
+
         String delimiter = ctx.StringInput().getText().substring(1, ctx.StringInput().getText().length() - 1);
-
         SplitOperationsContext splitOperations = ctx.splitOperations();
-
+        //Detect a "Split Max column action"
         if(splitOperations.splitMaxColumn() != null){
 
             int indexColumn = Integer.parseInt(splitOperations.splitMaxColumn().Number().getText());
@@ -172,6 +215,7 @@ public class Listener extends PoleLangBaseListener {
             }catch (Exception ex){
                 System.out.println("A problem detect in the file");
             }
+            //Detect a "Split Min column action"
         }else if(splitOperations.splitMinColumn() != null){
 
             int indexColumn = Integer.parseInt(splitOperations.splitMinColumn().Number().getText());
@@ -184,10 +228,9 @@ public class Listener extends PoleLangBaseListener {
                 buffer.add(minValue.toString());
                 System.out.println(String.format("Column: %d min-value: %f", indexColumn, minValue));
             }catch (Exception ex){
-                System.out.println("A problem detect in the file");
+                System.out.println("A problem detect in the file.");
             }
-
-
+            //Detect a "Split Sum column action"
         }else if(splitOperations.splitSumColumn() != null){
             int indexColumn = Integer.parseInt(splitOperations.splitSumColumn().Number().getText());
             try{
@@ -196,13 +239,18 @@ public class Listener extends PoleLangBaseListener {
                         .mapToDouble(i ->  Double.parseDouble(Arrays.asList(data.get(i).split(delimiter)).get(indexColumn-1)))
                         .sum();
                 buffer.add(sumValues.toString());
-                System.out.println(String.format("Column: %d sum-value: %f", indexColumn, sumValues));
+                System.out.println(String.format("Column %d: sum-value: %f", indexColumn, sumValues));
             }catch (Exception ex){
-                System.out.println("A problem detect in the file");
+                System.out.println("A problem detect in the file.");
             }
         }
     }
 
+    /**
+     * Exit copy action.
+     *
+     * @param ctx the ctx
+     */
     @Override
     public void exitCopyAction(CopyActionContext ctx) {
         Path pathFile = Paths.get(ctx.FileNameText().getText());
@@ -213,40 +261,54 @@ public class Listener extends PoleLangBaseListener {
             } catch (IOException e) {
                System.out.println(e.getMessage());
             }
-
         }else{
             System.out.println("Error. File to try copy already exists.");
         }
     }
 
+    /**
+     * Exit iterative action.
+     *
+     * @param ctx the ctx
+     */
     @Override
     public void exitIterativeAction(IterativeActionContext ctx) {
         ForActionContext forAction = ctx.forAction();
+        //Detect a "Iterative(For) action"
         if(forAction != null){
+            //Select index(start and end).
             int index = Integer.parseInt(forAction.Number(0).getText());
             int limit = Integer.parseInt(forAction.Number(1).getText());
             variables.put(forAction.ID().getText(), Integer.parseInt(forAction.Number(0).getText()));
             String text = forAction.iterativeOutputAction().StringInput().getText();
             text = text.substring(1, text.length() - 1);
-
             String indexVariable = String.format("{%s}", forAction.ID().getText());
+            boolean isExistVariable = false;
+
+            if(text.contains(indexVariable)) {
+                isExistVariable = true;
+            }
+
+            String tempFormat = "";
             while(index < limit){
-                if(text.contains(indexVariable)){
-                    text = text.replace(indexVariable, String.valueOf(index));
+                if(isExistVariable){
+                    tempFormat = text.replace(indexVariable, Integer.toString(index));
+                    buffer.add(tempFormat);
+                    System.out.println(tempFormat);
+                }else{
+                    buffer.add(text);
+                    System.out.println(text);
                 }
-                buffer.add(text);
-                System.out.println(text);
                 index++;
             }
         }
     }
-    /*
-    @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e)
-            throws ParseCancellationException {
-        throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + msg);
-    }*/
-
+    /**
+     * Visit error node.
+     *
+     * @param node the node
+     * @throws ParseCancellationException the parse cancellation exception
+     */
     @Override
     public void visitErrorNode(ErrorNode node)  throws ParseCancellationException{
         throw new ParseCancellationException("Error");

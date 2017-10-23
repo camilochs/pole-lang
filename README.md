@@ -1,4 +1,4 @@
-<img src="https://www.lucidchart.com/publicSegments/view/cef83044-f679-4ea6-9855-e5730aaa1c5d/image.png" alt="Drawing" style="width: 150px;"/>
+<img src="https://www.lucidchart.com/publicSegments/view/cef83044-f679-4ea6-9855-e5730aaa1c5d/image.png" alt="Drawing" style="width: 100px;"/>
 
 A simple programming language written in Java for processing text files. Pole-lang is an interpreted language that works on bash.
 

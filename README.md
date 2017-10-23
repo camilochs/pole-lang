@@ -1,6 +1,6 @@
 ## Pole-lang
 
-A simple programming language for processing text files. Pole-lang is an interpreted language that works on bash.
+A simple programming language written in Java for processing text files. Pole-lang is an interpreted language that works on bash.
 
 Example(video):
 *	https://asciinema.org/a/VciwgjOy2eOjmYz6NNIlJmw0i

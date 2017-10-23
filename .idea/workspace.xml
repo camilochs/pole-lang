@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9152384c-e882-4368-969f-fd9a34b2829a" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/test_data.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ErrorListener.class" afterPath="$PROJECT_DIR$/src/ErrorListener.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.class" afterPath="$PROJECT_DIR$/src/Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ParseException.class" afterPath="$PROJECT_DIR$/src/ParseException.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/grammar/Listener.class" afterPath="$PROJECT_DIR$/src/grammar/Listener.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/grammar/Listener.java" afterPath="$PROJECT_DIR$/src/grammar/Listener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/grammar/PoleLang.g4" afterPath="$PROJECT_DIR$/src/grammar/PoleLang.g4" />
-    </list>
+    <list default="true" id="9152384c-e882-4368-969f-fd9a34b2829a" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -23,7 +23,7 @@ Data was copied to test.txt
 ```
 
 ```
-> pole print test.txt
+$ pole print test.txt
 0,1,2
 1,1,2
 2,1,2
@@ -33,8 +33,8 @@ Data was copied to test.txt
 ```
 
 ```
-> pole add head '"1,"' to test.txt
-> pole print test.txt
+$ pole add head '"1,"' to test.txt
+$ pole print test.txt
 1,0,1,2
 1,1,1,2
 1,2,1,2
@@ -44,21 +44,21 @@ Data was copied to test.txt
 ```
 
 ```
-> pole split test.txt with '","' max-column 1
+$ pole split test.txt with '","' max-column 1
 Column: 1 max-value: 1
-> pole split test.txt with '","' sum-column 1
+$ pole split test.txt with '","' sum-column 1
 Column: 1 max-value: 6
-> pole split test.txt with '","' sum-column 2
+$ pole split test.txt with '","' sum-column 2
 Column: 1 max-value: 15
 ```
 
 ```
-> pole print test.txt line 1 to 2
+$ pole print test.txt line 1 to 2
 1,0,1,2
 1,1,1,2
-> pole print test.txt line 1 to 2 exists '"0"'
+$ pole print test.txt line 1 to 2 exists '"0"'
 1,0,1,2
-> pole print test.txt line 1 to 2 exists '"0"' copy test2.txt
+$ pole print test.txt line 1 to 2 exists '"0"' copy test2.txt
 1,0,1,2
 Data was copied to test2.txt
 ```

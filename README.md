@@ -12,7 +12,7 @@ Examples(video):
 Code examples:
 
 ```
-> pole for i = 0 to 5 '"{i},1,2"' copy test.txt
+$ pole for i = 0 to 5 '"{i},1,2"' copy test.txt
 0,1,2
 1,1,2
 2,1,2

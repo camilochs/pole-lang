@@ -47,9 +47,9 @@ $ pole print test.txt
 $ pole split test.txt with '","' max-column 1
 Column: 1 max-value: 1
 $ pole split test.txt with '","' sum-column 1
-Column: 1 max-value: 6
+Column: 1 sum-value: 6
 $ pole split test.txt with '","' sum-column 2
-Column: 1 max-value: 15
+Column: 1 sum-value: 15
 ```
 
 ```
